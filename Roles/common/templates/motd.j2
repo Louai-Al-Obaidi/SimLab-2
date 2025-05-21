@@ -1,0 +1,17 @@
+#################################################################################################
+			
+			#Welcome to {{ ansible_hostname }}
+                                        
+#################################################################################################
+			
+			#Managed by the Canardshop IT Team                                       
+                                                                                               
+	#Date & Time      : {{ ansible_date_time.date }} {{ ansible_date_time.time }}            
+	#Operating System : {{ ansible_distribution }} {{ ansible_distribution_version }}        
+	#Kernel           : {{ ansible_kernel }}                                                 
+	#Architecture     : {{ ansible_architecture }}                                           
+	#Uptime           : {{ ansible_uptime_seconds | int // 3600 }} hours                     
+
+                                                                                       
+	#Unauthorized access is strictly prohibited. All activity is logged.                     
+#################################################################################################

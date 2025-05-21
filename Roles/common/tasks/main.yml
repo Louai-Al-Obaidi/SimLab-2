@@ -1,0 +1,73 @@
+# tasks file for common
+---
+# Debian-based
+- name: Update packages - Debian-based
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+    upgrade: yes
+  when: ansible_distribution in ["Debian", "Ubuntu", "Kali"]
+  become: true
+
+- name: Install common packages - Debian-based
+  ansible.builtin.apt:
+    name: "{{ packages_common }}"
+    state: present
+    update_cache: true
+  when: ansible_distribution in ["Debian", "Ubuntu", "Kali"]
+  become: true
+
+# AlmaLinux
+- name: Update packages - AlmaLinux
+  ansible.builtin.dnf:
+    update_cache: yes
+    update_only: true
+    state: latest
+  when: ansible_distribution == "AlmaLinux"
+  become: true
+
+- name: Install common packages - AlmaLinux
+  ansible.builtin.dnf:
+    name: "{{ packages_common }}"
+    state: present
+    update_cache: true
+  when: ansible_distribution == "AlmaLinux"
+  become: true
+
+
+# FreeBSD
+- name: Update packages - FreeBSD
+  ansible.builtin.command: pkg update -f
+  when: ansible_os_family == "FreeBSD"
+  become: true
+
+- name: Install common packages - FreeBSD
+  ansible.builtin.pkgng:
+    name: "{{ packages_common }}"
+    state: present
+  when: ansible_os_family == "FreeBSD"
+  become: true
+
+# Create Personalized MOTD
+- name: Create personalized MOTD
+  ansible.builtin.template:
+    src: motd.j2
+    dest: /etc/motd
+  become: true
+
+- name: Debug MOTD creation
+  debug:
+    msg: "MOTD deployed from motd.j2"
+
+- name: Disable password authentication for ansible user
+  blockinfile:
+    path: /etc/ssh/sshd_config
+    block: |
+      Match User ansible
+          PasswordAuthentication no
+          PubkeyAuthentication yes
+  notify: Restart SSH service
+
+- name: Debug SSH config block inserted
+  debug:
+    msg: "SSH PasswordAuthentication disabled (User can only use SSH key)"

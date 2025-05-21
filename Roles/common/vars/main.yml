@@ -1,0 +1,6 @@
+---
+# vars file for common
+packages_common:
+  - curl
+  - tree
+  - htop
