@@ -1,0 +1,8 @@
+---
+- name: Ping all managed hosts
+  hosts: all-servers
+  gather_facts: false
+
+  tasks:
+    - name: Ping test
+      ansible.builtin.ping:
