@@ -34,15 +34,6 @@ allowed_ports_by_host:
   server1: ["22/tcp", "80/tcp", "443/tcp"]
   server2: ["22/tcp", "3306/tcp"]
 
-💾 backup – File & Config Backups
-Automates important file backups:
-
-📁 Fetches and archives files/directories
-
-🔄 Optionally schedules regular backups
-
-📤 Can sync to a remote backup server
-
 Customizable via variables in your playbook.
 
 ▶️ Example Playbook
@@ -59,14 +50,8 @@ Customizable via variables in your playbook.
   roles:
     - firewall
 
-- name: Back up configs
-  hosts: all
-  become: yes
-  roles:
-    - backup
-Run it with:
 
-ansible-playbook firewall.yaml -i hosts_inventory 
+ansible-playbook firewall.yaml -i hosts_inventory OR ansible-playbook common.yaml -i hosts_inventory
 
 ✅ Requirements
 🐍 Python installed on target machines
@@ -75,9 +60,9 @@ ansible-playbook firewall.yaml -i hosts_inventory
 
 🧑‍💻 Ansible 2.16+ on control node
 
-🖥️ Supported OS: Ubuntu/Debian/CentOS/FreeBSD
+🖥️ Supported OS: Ubuntu/Debian/RedHat/
 
-🔐 Sudo privileges (with or without password)
+🔐 Sudo privileges
 
 📝 License
 Licensed under the MIT License. Free to use, modify, and share!
