@@ -1,0 +1,10 @@
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+{% for port in allowed_ports_by_host[inventory_hostname] %}
+-A INPUT -p {{ port.split('/')[-1] }} --dport {{ port.split('/')[0] }} -j ACCEPT
+{% endfor %}
+COMMIT

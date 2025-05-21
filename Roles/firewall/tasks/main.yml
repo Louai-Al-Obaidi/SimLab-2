@@ -1,0 +1,115 @@
+    # Debian-based Systems
+    - name: Install firewalld on Debian-based systems
+      apt:
+        name: firewalld
+        state: present
+        update_cache: true
+      when: ansible_os_family == "Debian"
+
+    - name: Ensure firewalld is running and enabled on Debian-based systems
+      service:
+        name: firewalld
+        state: started
+        enabled: true
+      when: ansible_os_family == "Debian"
+
+    - name: Open allowed ports with firewalld on Debian-based systems
+      ansible.posix.firewalld:
+        port: "{{ item }}"
+        permanent: true
+        state: enabled
+        immediate: true
+      loop: "{{ allowed_ports_by_host[inventory_hostname] | default([]) }}"
+      when: ansible_os_family == "Debian"
+
+    # RedHat-based Systems
+    - name: Install firewalld on RedHat-based systems
+      dnf:
+        name: firewalld
+        state: present
+        update_cache: true
+      when: ansible_os_family == "RedHat"
+
+    - name: Ensure firewalld is running and enabled on RedHat-based systems
+      service:
+        name: firewalld
+        state: started
+        enabled: true
+      when: ansible_os_family == "RedHat"
+
+    - name: Open allowed ports with firewalld on RedHat-based systems
+      ansible.posix.firewalld:
+        port: "{{ item }}"
+        permanent: true
+        state: enabled
+        immediate: true
+      loop: "{{ allowed_ports_by_host[inventory_hostname] | default([]) }}"
+      when: ansible_os_family == "RedHat"
+
+    # Alpine Linux
+    - name: Install iptables and iptables-openrc on Alpine Linux
+      apk:
+        name:
+          - iptables
+          - iptables-openrc
+        state: present
+      when: ansible_distribution == "Alpine"
+
+    - name: Add iptables rules from template on Alpine Linux
+      template:
+        src: iptables.rules.j2
+        dest: /etc/iptables/rules-save
+      when: ansible_distribution == "Alpine"
+
+    - name: Save iptables rules on Alpine Linux
+      command: /etc/init.d/iptables save
+      when: ansible_distribution == "Alpine"
+
+    - name: Ensure iptables service is started and enabled on Alpine Linux
+      service:
+        name: iptables
+        state: started
+        enabled: true
+      when: ansible_distribution == "Alpine"
+
+    # FreeBSD
+    - name: Load pf module on FreeBSD
+      command: kldload pf
+      args:
+        warn: false
+      when: ansible_os_family == "FreeBSD"
+
+    - name: Ensure pf is enabled in rc.conf on FreeBSD
+      lineinfile:
+        path: /etc/rc.conf
+        line: pf_enable="YES"
+        create: yes
+      when: ansible_os_family == "FreeBSD"
+
+    - name: Ensure pf module is loaded at boot on FreeBSD
+      lineinfile:
+        path: /boot/loader.conf
+        line: pf_load="YES"
+        create: yes
+      when: ansible_os_family == "FreeBSD"
+
+    - name: Deploy pf.conf from template on FreeBSD
+      template:
+        src: pf.conf.j2
+        dest: /etc/pf.conf
+      when: ansible_os_family == "FreeBSD"
+
+    - name: Validate pf.conf syntax on FreeBSD
+      command: pfctl -nf /etc/pf.conf
+      when: ansible_os_family == "FreeBSD"
+
+    - name: Reload pf with new configuration on FreeBSD
+      command: pfctl -f /etc/pf.conf
+      when: ansible_os_family == "FreeBSD"
+
+    - name: Ensure pf service is enabled and started on FreeBSD
+      service:
+        name: pf
+        state: started
+        enabled: true
+      when: ansible_os_family == "FreeBSD"

@@ -1,0 +1,15 @@
+---
+# handlers file for firewall
+- name: Reload firewalld
+  service:
+    name: firewalld
+    state: reloaded
+  become: true
+
+- name: Reload iptables
+  command: /etc/init.d/iptables restart
+  become: true
+
+- name: Reload pf
+  command: pfctl -f /etc/pf.conf
+  become: true

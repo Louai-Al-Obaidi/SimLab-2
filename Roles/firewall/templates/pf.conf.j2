@@ -1,0 +1,12 @@
+block all
+pass quick on lo0 all
+pass in proto tcp to port {
+  {% for port in allowed_ports_by_host[inventory_hostname] if port.endswith('/tcp') %}
+  {{ port.split('/')[0] }}
+  {% endfor %}
+}
+pass in proto udp to port {
+  {% for port in allowed_ports_by_host[inventory_hostname] if port.endswith('/udp') %}
+  {{ port.split('/')[0] }}
+  {% endfor %}
+}
