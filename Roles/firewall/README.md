@@ -1,38 +1,47 @@
-Role Name
-=========
+# 🧰 Ansible Role: common
 
-A brief description of the role goes here.
+This role handles basic setup tasks that are commonly needed on all lab systems.
 
-Requirements
-------------
+---
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## ✅ What It Does
 
-Role Variables
---------------
+- 🆙 Updates the package cache
+- 📦 Installs essential packages
+- 📜 Configures a custom Message of the Day (MOTD)
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+---
 
-Dependencies
-------------
+## ⚙️ Role Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+| Variable               | Description                                | Default         |
+|------------------------|--------------------------------------------|-----------------|
+| `common_packages`      | List of packages to install                | `[]`            |
+| `common_configure_motd`| Enable or disable custom MOTD              | `true`          |
+| `common_motd_message`  | Message to display in `/etc/motd`          | `"Welcome!"`    |
 
-Example Playbook
-----------------
+---
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+## 🚀 Example Playbook
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+- name: Apply common base configuration
+  hosts: all
+  become: yes
+  roles:
+    - role: common
+      vars:
+        common_packages:
+          - htop
+          - curl
+          - tree
+        common_motd_message: |
+          Welcome to the SimLab environment!
+          Managed by Ansible 🤖
+📄 License
+MIT
 
-License
--------
+👤 Author
+Created by Louai Al-Obaidi
+Part of the SimLab-2 project 🚀
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
