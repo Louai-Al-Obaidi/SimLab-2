@@ -11,7 +11,7 @@ Each role under the `Roles/` directory is designed to configure and manage speci
 Handles essential system setup:
 
 - 🆙 Updates package lists and upgrades packages
-- 🧪 Installs common utilities (like `vim`, `curl`, `git`)
+- 🧪 Installs common utilities (like `tree`, `curl`, `htop`)
 - 📜 Configures a custom Message of the Day (MOTD)
 - ⏰ Sets up time synchronization
 
